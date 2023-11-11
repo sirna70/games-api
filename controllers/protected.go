@@ -46,8 +46,6 @@ func Profile(c *gin.Context) {
 		return
 	}
 
-	player.Password = ""
-
 	response := models.ProfileResponse{
 		Username:      player.Username,
 		Email:         player.Email,
