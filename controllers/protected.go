@@ -35,7 +35,9 @@ func Profile(c *gin.Context) {
 	}
 
 	var account models.Account
+
 	resultAccount := database.GlobalDB.Where("player_id = ?", player.ID).First(&account)
+
 	if resultAccount.Error != nil {
 		c.JSON(500, gin.H{
 			"Error": "Could Not Get Player Account",
@@ -44,14 +46,19 @@ func Profile(c *gin.Context) {
 		return
 	}
 
+	// player.Password = ""
+
 	response := models.ProfileResponse{
-		Username:      player.Username,
-		Email:         player.Email,
-		Password:      player.Password,
-		Wallet:        player.Wallet,
-		AccountName:   account.AccountName,
-		AccountNumber: account.AccountNumber,
-		BankName:      account.BankName,
+		Username:         player.Username,
+		Email:            player.Email,
+		Password:         player.Password,
+		Wallet:           player.Wallet,
+		AccountName:      account.AccountName,
+		AccountNumber:    account.AccountNumber,
+		BankName:         account.BankName,
+		CreatedAt:        player.CreatedAt,
+		UpdatedAt:        player.UpdatedAt,
+		AccountCreatedAt: account.CreatedAt,
 	}
 
 	c.JSON(200, response)
@@ -137,6 +144,7 @@ func GetListPlayer(c *gin.Context) {
 	accountNumber := c.Query("accountNumber")
 	bankName := c.Query("bankName")
 	wallet := c.Query("wallet")
+	createdAt := c.Query("createdAt")
 
 	query := database.GlobalDB.Debug().Table("players").Select("players.*, accounts.account_name, accounts.account_number, accounts.bank_name,accounts.created_at as account_created_at ")
 
@@ -146,7 +154,7 @@ func GetListPlayer(c *gin.Context) {
 		query = query.Where("players.username like ?", "%"+username+"%")
 	}
 	if accountName != "" {
-		query = query.Where("accounts.account_name like ?", accountName)
+		query = query.Where("accounts.account_name like ?", "%"+accountName+"%")
 	}
 	if accountNumber != "" {
 		query = query.Where("accounts.account_number like ?", accountNumber)
@@ -156,6 +164,9 @@ func GetListPlayer(c *gin.Context) {
 	}
 	if wallet != "" {
 		query = query.Where("players.wallet <= ?", wallet)
+	}
+	if createdAt != "" {
+		query = query.Where("TO_CHAR(players.created_at, 'yyyy-mm-dd') = ?", createdAt)
 	}
 
 	var playerResponses []models.PlayerAccountResponse
