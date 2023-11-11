@@ -35,9 +35,7 @@ func Profile(c *gin.Context) {
 	}
 
 	var account models.Account
-
 	resultAccount := database.GlobalDB.Where("player_id = ?", player.ID).First(&account)
-
 	if resultAccount.Error != nil {
 		c.JSON(500, gin.H{
 			"Error": "Could Not Get Player Account",
