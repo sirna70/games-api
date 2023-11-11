@@ -49,11 +49,11 @@ func setupRouter() *gin.Engine {
 		protected := api.Group("/protected").Use(middlewares.Authz())
 		{
 
-			protected.GET("/profile", controllers.Profile)
+			protected.GET("/profile", controllers.Profile) // detail player
 			protected.POST("/logout", controllers.Logout)
 			protected.POST("/account", controllers.Account)
 			protected.PUT("/topupbalance", controllers.TopUpBalance)
-			protected.GET("/getlistplayer", controllers.GetListPlayer)
+			protected.GET("/getlistplayer", controllers.GetListPlayer) // return list player and filter
 		}
 	}
 
