@@ -50,8 +50,8 @@ func setupRouter() *gin.Engine {
 		{
 
 			protected.GET("/profile", controllers.Profile) // detail player
-			protected.POST("/logout", controllers.Logout)
-			protected.POST("/account", controllers.Account)
+			protected.POST("/logout", controllers.Logout) // 
+			protected.POST("/account", controllers.Account) // register account bank
 			protected.PUT("/topupbalance", controllers.TopUpBalance)
 			protected.GET("/getlistplayer", controllers.GetListPlayer) // return list player and filter
 		}
